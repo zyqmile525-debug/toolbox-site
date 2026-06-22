@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "toolbox-site",
+  "compatibility_date": "2026-06-22",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "toolbox-site"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
