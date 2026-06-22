@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字数统计 - 在线中英文字数统计 | ToolBox</title>
+<meta name="description" content="免费在线字数统计工具，支持中英文字符数、字数、行数、段落数统计。">
+<meta name="keywords" content="字数统计,字符统计,中文字数,英文字数,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 文字工具 / 字数统计</div>
+    <h1>📊 字数统计</h1>
+    <p class="subtitle">实时统计中英文字符数、字数、行数、段落数</p>
+
+    <div class="tool-area">
+      <h3>📝 输入文本</h3>
+      <textarea id="input" placeholder="在这里输入或粘贴文本，下方会实时显示统计结果..." oninput="count()"></textarea>
+    </div>
+
+    <div class="tool-area">
+      <h3>📊 统计结果</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px">
+        <div style="background:#ede9fe;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#6366f1" id="totalChars">0</div>
+          <div style="font-size:0.85em;color:#64748b">总字符数</div>
+        </div>
+        <div style="background:#fef3c7;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#d97706" id="chineseChars">0</div>
+          <div style="font-size:0.85em;color:#64748b">中文字符</div>
+        </div>
+        <div style="background:#d1fae5;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#059669" id="englishChars">0</div>
+          <div style="font-size:0.85em;color:#64748b">英文字母</div>
+        </div>
+        <div style="background:#fee2e2;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#dc2626" id="digitChars">0</div>
+          <div style="font-size:0.85em;color:#64748b">数字</div>
+        </div>
+        <div style="background:#e0f2fe;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#0284c7" id="lines">0</div>
+          <div style="font-size:0.85em;color:#64748b">行数</div>
+        </div>
+        <div style="background:#fce7f3;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#db2777" id="paragraphs">0</div>
+          <div style="font-size:0.85em;color:#64748b">段落数</div>
+        </div>
+        <div style="background:#f1f5f9;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#475569" id="words">0</div>
+          <div style="font-size:0.85em;color:#64748b">英文单词</div>
+        </div>
+        <div style="background:#f5f3ff;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:2em;font-weight:800;color:#7c3aed" id="noSpaces">0</div>
+          <div style="font-size:0.85em;color:#64748b">不含空格</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-area">
+      <h3>⏱️ 阅读时间估算</h3>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div>📖 中文阅读 (500字/分钟): <strong id="readTimeCn">0</strong> 分钟</div>
+        <div>📚 英文阅读 (200词/分钟): <strong id="readTimeEn">0</strong> 分钟</div>
+        <div>⌨️ 打字 (80字/分钟): <strong id="typeTime">0</strong> 分钟</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+function count() {
+  const text = document.getElementById('input').value;
+
+  const totalChars = text.length;
+  const chineseChars = (text.match(/[一-鿿㐀-䶿]/g) || []).length;
+  const englishChars = (text.match(/[a-zA-Z]/g) || []).length;
+  const digitChars = (text.match(/[0-9]/g) || []).length;
+  const lines = text ? text.split('\n').length : 0;
+  const paragraphs = text ? text.split(/\n\s*\n/).filter(p => p.trim()).length : 0;
+  const words = text ? (text.match(/[a-zA-Z]+/g) || []).length : 0;
+  const noSpaces = text.replace(/\s/g, '').length;
+
+  document.getElementById('totalChars').textContent = totalChars;
+  document.getElementById('chineseChars').textContent = chineseChars;
+  document.getElementById('englishChars').textContent = englishChars;
+  document.getElementById('digitChars').textContent = digitChars;
+  document.getElementById('lines').textContent = lines;
+  document.getElementById('paragraphs').textContent = paragraphs;
+  document.getElementById('words').textContent = words;
+  document.getElementById('noSpaces').textContent = noSpaces;
+
+  document.getElementById('readTimeCn').textContent = Math.ceil((chineseChars + words) / 500) || 0;
+  document.getElementById('readTimeEn').textContent = Math.ceil(words / 200) || 0;
+  document.getElementById('typeTime').textContent = Math.ceil(totalChars / 80) || 0;
+}
+</script>
+</body>
+</html>

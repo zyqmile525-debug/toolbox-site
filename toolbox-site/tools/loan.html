@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贷款计算器 - 在线房贷车贷计算 | ToolBox</title>
+<meta name="description" content="免费在线贷款计算器，支持等额本息、等额本金还款方式，计算月供和利息。">
+<meta name="keywords" content="贷款计算器,房贷计算器,月供计算,等额本息,等额本金,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 生活工具 / 贷款计算器</div>
+    <h1>💰 贷款计算器</h1>
+    <p class="subtitle">等额本息/等额本金还款方式，计算月供和总利息</p>
+
+    <div class="tool-area">
+      <div class="grid-3">
+        <div>
+          <label>贷款金额 (万元)</label>
+          <input type="number" id="amount" value="100" oninput="calc()">
+        </div>
+        <div>
+          <label>贷款年限 (年)</label>
+          <input type="number" id="years" value="30" oninput="calc()">
+        </div>
+        <div>
+          <label>年利率 (%)</label>
+          <input type="number" id="rate" value="3.1" step="0.01" oninput="calc()">
+        </div>
+      </div>
+
+      <div class="option-group" style="margin-top:16px">
+        <div class="option-item active" data-method="equal-installment" onclick="selectMethod(this)">等额本息</div>
+        <div class="option-item" data-method="equal-principal" onclick="selectMethod(this)">等额本金</div>
+      </div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📊 计算结果</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px">
+        <div style="background:#ede9fe;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light)">每月月供</div>
+          <div style="font-size:1.8em;font-weight:800;color:#6366f1" id="monthlyPay">-</div>
+        </div>
+        <div style="background:#fef3c7;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light)">总还款额</div>
+          <div style="font-size:1.8em;font-weight:800;color:#d97706" id="totalPay">-</div>
+        </div>
+        <div style="background:#fee2e2;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light)">总利息</div>
+          <div style="font-size:1.8em;font-weight:800;color:#dc2626" id="totalInterest">-</div>
+        </div>
+        <div style="background:#d1fae5;padding:20px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light)">贷款总额</div>
+          <div style="font-size:1.8em;font-weight:800;color:#059669" id="totalLoan">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📋 还款明细 <button class="btn btn-secondary" style="margin-left:auto;padding:6px 14px;font-size:0.85em" onclick="toggleDetail()">展开/收起</button></h3>
+      <div id="detailTable" style="display:none;max-height:400px;overflow-y:auto"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+let method = 'equal-installment';
+
+function selectMethod(el) {
+  document.querySelector('.option-item.active').classList.remove('active');
+  el.classList.add('active');
+  method = el.dataset.method;
+  calc();
+}
+
+function calc() {
+  const amount = parseFloat(document.getElementById('amount').value) * 10000;
+  const years = parseInt(document.getElementById('years').value);
+  const annualRate = parseFloat(document.getElementById('rate').value) / 100;
+
+  if (!amount || !years || !annualRate) return;
+
+  const months = years * 12;
+  const monthRate = annualRate / 12;
+
+  let totalPay, totalInterest, monthlyPayText;
+
+  if (method === 'equal-installment') {
+    // 等额本息
+    const monthly = amount * monthRate * Math.pow(1 + monthRate, months) / (Math.pow(1 + monthRate, months) - 1);
+    totalPay = monthly * months;
+    totalInterest = totalPay - amount;
+    monthlyPayText = formatMoney(monthly);
+
+    // 生成明细
+    let balance = amount;
+    let rows = '';
+    for (let i = 1; i <= Math.min(months, 120); i++) {
+      const interest = balance * monthRate;
+      const principal = monthly - interest;
+      balance -= principal;
+      if (i <= 12 || i > months - 3) {
+        rows += `<tr><td>${i}</td><td>${formatMoney(monthly)}</td><td>${formatMoney(principal)}</td><td>${formatMoney(interest)}</td><td>${formatMoney(Math.max(0, balance))}</td></tr>`;
+      } else if (i === 13) {
+        rows += `<tr><td colspan="5" style="text-align:center;color:var(--text-light)">... 省略中间月份 ...</td></tr>`;
+      }
+    }
+    document.getElementById('detailTable').innerHTML = `<table class="data-table"><thead><tr><th>期数</th><th>月供</th><th>本金</th><th>利息</th><th>剩余本金</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+  } else {
+    // 等额本金
+    const monthlyPrincipal = amount / months;
+    let balance = amount;
+    let total = 0;
+    let firstMonth = 0;
+    let rows = '';
+
+    for (let i = 1; i <= months; i++) {
+      const interest = balance * monthRate;
+      const monthly = monthlyPrincipal + interest;
+      total += monthly;
+      balance -= monthlyPrincipal;
+
+      if (i === 1) firstMonth = monthly;
+
+      if (i <= 12 || i > months - 3) {
+        rows += `<tr><td>${i}</td><td>${formatMoney(monthly)}</td><td>${formatMoney(monthlyPrincipal)}</td><td>${formatMoney(interest)}</td><td>${formatMoney(Math.max(0, balance))}</td></tr>`;
+      } else if (i === 13) {
+        rows += `<tr><td colspan="5" style="text-align:center;color:var(--text-light)">... 省略中间月份 ...</td></tr>`;
+      }
+    }
+
+    totalPay = total;
+    totalInterest = total - amount;
+    monthlyPayText = formatMoney(firstMonth) + ' (逐月递减)';
+
+    document.getElementById('detailTable').innerHTML = `<table class="data-table"><thead><tr><th>期数</th><th>月供</th><th>本金</th><th>利息</th><th>剩余本金</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  document.getElementById('monthlyPay').textContent = monthlyPayText;
+  document.getElementById('totalPay').textContent = formatMoney(totalPay);
+  document.getElementById('totalInterest').textContent = formatMoney(totalInterest);
+  document.getElementById('totalLoan').textContent = formatMoney(amount);
+}
+
+function formatMoney(num) {
+  return '¥' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function toggleDetail() {
+  const table = document.getElementById('detailTable');
+  table.style.display = table.style.display === 'none' ? '' : 'none';
+}
+
+calc();
+</script>
+</body>
+</html>

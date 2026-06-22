@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://yourdomain.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://yourdomain.com/tools/json-formatter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/image-compress.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/base64.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/color-converter.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/password-gen.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/word-count.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/timestamp.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/qr-code.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/regex.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/hash.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/bmi.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/unit-convert.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yourdomain.com/tools/loan.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单位换算 - 在线单位转换工具 | ToolBox</title>
+<meta name="description" content="免费在线单位换算工具，支持长度、重量、温度、面积、体积、速度等单位转换。">
+<meta name="keywords" content="单位换算,单位转换,长度换算,重量换算,温度换算,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 生活工具 / 单位换算</div>
+    <h1>📏 单位换算</h1>
+    <p class="subtitle">长度、重量、温度、面积、体积、速度单位在线转换</p>
+
+    <div class="tool-area">
+      <h3>📐 选择类型</h3>
+      <div class="option-group" id="typeGroup">
+        <div class="option-item active" data-type="length" onclick="selectType(this)">📏 长度</div>
+        <div class="option-item" data-type="weight" onclick="selectType(this)">⚖️ 重量</div>
+        <div class="option-item" data-type="temperature" onclick="selectType(this)">🌡️ 温度</div>
+        <div class="option-item" data-type="area" onclick="selectType(this)">📐 面积</div>
+        <div class="option-item" data-type="volume" onclick="selectType(this)">🧊 体积</div>
+        <div class="option-item" data-type="speed" onclick="selectType(this)">🚀 速度</div>
+        <div class="option-item" data-type="data" onclick="selectType(this)">💾 数据</div>
+        <div class="option-item" data-type="time" onclick="selectType(this)">⏰ 时间</div>
+      </div>
+
+      <div class="grid-2" style="margin-top:20px">
+        <div>
+          <label>从</label>
+          <select id="fromUnit" onchange="convert()"></select>
+          <input type="number" id="fromValue" value="1" oninput="convert()" style="margin-top:8px">
+        </div>
+        <div>
+          <label>到</label>
+          <select id="toUnit" onchange="convert()"></select>
+          <input type="number" id="toValue" readonly style="margin-top:8px;background:#f8fafc;font-weight:bold;color:var(--primary)">
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center">
+        <button class="btn btn-primary" onclick="swapUnits()">🔄 交换</button>
+        <button class="btn btn-secondary" onclick="copyToClipboard(document.getElementById('toValue').value)">📋 复制结果</button>
+      </div>
+    </div>
+
+    <div class="tool-area" id="quickRef" style="display:none">
+      <h3>📋 常用换算表</h3>
+      <table class="data-table" id="refTable"></table>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+const units = {
+  length: {
+    name: '长度',
+    units: {
+      'mm': { name: '毫米 (mm)', factor: 0.001 },
+      'cm': { name: '厘米 (cm)', factor: 0.01 },
+      'm': { name: '米 (m)', factor: 1 },
+      'km': { name: '千米 (km)', factor: 1000 },
+      'in': { name: '英寸 (in)', factor: 0.0254 },
+      'ft': { name: '英尺 (ft)', factor: 0.3048 },
+      'yd': { name: '码 (yd)', factor: 0.9144 },
+      'mi': { name: '英里 (mi)', factor: 1609.344 },
+      'li': { name: '里 (li)', factor: 500 },
+      'zhang': { name: '丈', factor: 3.333 },
+      'chi': { name: '尺', factor: 0.333 },
+      'cun': { name: '寸', factor: 0.0333 },
+      'nmi': { name: '海里 (nmi)', factor: 1852 }
+    }
+  },
+  weight: {
+    name: '重量',
+    units: {
+      'mg': { name: '毫克 (mg)', factor: 0.000001 },
+      'g': { name: '克 (g)', factor: 0.001 },
+      'kg': { name: '千克 (kg)', factor: 1 },
+      't': { name: '吨 (t)', factor: 1000 },
+      'oz': { name: '盎司 (oz)', factor: 0.0283495 },
+      'lb': { name: '磅 (lb)', factor: 0.453592 },
+      'jin': { name: '斤', factor: 0.5 },
+      'liang': { name: '两', factor: 0.05 }
+    }
+  },
+  temperature: {
+    name: '温度',
+    units: {
+      'c': { name: '摄氏度 (°C)' },
+      'f': { name: '华氏度 (°F)' },
+      'k': { name: '开尔文 (K)' }
+    },
+    custom: true
+  },
+  area: {
+    name: '面积',
+    units: {
+      'mm2': { name: '平方毫米', factor: 0.000001 },
+      'cm2': { name: '平方厘米', factor: 0.0001 },
+      'm2': { name: '平方米', factor: 1 },
+      'km2': { name: '平方千米', factor: 1000000 },
+      'ha': { name: '公顷', factor: 10000 },
+      'mu': { name: '亩', factor: 666.667 },
+      'acre': { name: '英亩', factor: 4046.86 },
+      'ft2': { name: '平方英尺', factor: 0.0929 },
+      'in2': { name: '平方英寸', factor: 0.000645 }
+    }
+  },
+  volume: {
+    name: '体积',
+    units: {
+      'ml': { name: '毫升 (mL)', factor: 0.000001 },
+      'l': { name: '升 (L)', factor: 0.001 },
+      'm3': { name: '立方米', factor: 1 },
+      'gal': { name: '加仑 (gal)', factor: 0.003785 },
+      'qt': { name: '夸脱 (qt)', factor: 0.000946 },
+      'cup': { name: '杯 (cup)', factor: 0.000237 }
+    }
+  },
+  speed: {
+    name: '速度',
+    units: {
+      'ms': { name: '米/秒 (m/s)', factor: 1 },
+      'kmh': { name: '千米/时 (km/h)', factor: 0.277778 },
+      'mph': { name: '英里/时 (mph)', factor: 0.44704 },
+      'kn': { name: '节 (kn)', factor: 0.514444 },
+      'mach': { name: '马赫', factor: 340.3 }
+    }
+  },
+  data: {
+    name: '数据',
+    units: {
+      'b': { name: '比特 (b)', factor: 1 },
+      'B': { name: '字节 (B)', factor: 8 },
+      'KB': { name: 'KB', factor: 8192 },
+      'MB': { name: 'MB', factor: 8388608 },
+      'GB': { name: 'GB', factor: 8589934592 },
+      'TB': { name: 'TB', factor: 8796093022208 }
+    }
+  },
+  time: {
+    name: '时间',
+    units: {
+      'ms': { name: '毫秒', factor: 0.001 },
+      's': { name: '秒', factor: 1 },
+      'min': { name: '分钟', factor: 60 },
+      'h': { name: '小时', factor: 3600 },
+      'd': { name: '天', factor: 86400 },
+      'w': { name: '周', factor: 604800 },
+      'mon': { name: '月(30天)', factor: 2592000 },
+      'y': { name: '年(365天)', factor: 31536000 }
+    }
+  }
+};
+
+let currentType = 'length';
+
+function selectType(el) {
+  document.querySelector('.option-item.active').classList.remove('active');
+  el.classList.add('active');
+  currentType = el.dataset.type;
+  populateUnits();
+  convert();
+}
+
+function populateUnits() {
+  const type = units[currentType];
+  const fromSelect = document.getElementById('fromUnit');
+  const toSelect = document.getElementById('toUnit');
+  const entries = Object.entries(type.units);
+
+  fromSelect.innerHTML = entries.map(([k, v]) => `<option value="${k}">${v.name}</option>`).join('');
+  toSelect.innerHTML = entries.map(([k, v]) => `<option value="${k}">${v.name}</option>`).join('');
+
+  // 默认选择不同的单位
+  if (entries.length > 1) toSelect.selectedIndex = 1;
+}
+
+function convert() {
+  const type = units[currentType];
+  const from = document.getElementById('fromUnit').value;
+  const to = document.getElementById('toUnit').value;
+  const value = parseFloat(document.getElementById('fromValue').value);
+
+  if (isNaN(value)) { document.getElementById('toValue').value = ''; return; }
+
+  let result;
+  if (currentType === 'temperature') {
+    result = convertTemperature(value, from, to);
+  } else {
+    const fromFactor = type.units[from].factor;
+    const toFactor = type.units[to].factor;
+    result = value * fromFactor / toFactor;
+  }
+
+  document.getElementById('toValue').value = result.toPrecision(10).replace(/\.?0+$/, '');
+}
+
+function convertTemperature(value, from, to) {
+  let celsius;
+  if (from === 'c') celsius = value;
+  else if (from === 'f') celsius = (value - 32) * 5/9;
+  else celsius = value - 273.15;
+
+  if (to === 'c') return celsius;
+  if (to === 'f') return celsius * 9/5 + 32;
+  return celsius + 273.15;
+}
+
+function swapUnits() {
+  const from = document.getElementById('fromUnit');
+  const to = document.getElementById('toUnit');
+  const temp = from.value;
+  from.value = to.value;
+  to.value = temp;
+  convert();
+}
+
+populateUnits();
+convert();
+</script>
+</body>
+</html>

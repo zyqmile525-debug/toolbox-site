@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON格式化 - 在线JSON美化压缩校验 | ToolBox</title>
+<meta name="description" content="免费在线JSON格式化工具，支持JSON美化、压缩、校验、转义，实时预览，一键复制。">
+<meta name="keywords" content="JSON格式化,JSON美化,JSON压缩,JSON校验,JSON在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工具 / JSON格式化</div>
+    <h1>{ } JSON格式化</h1>
+    <p class="subtitle">在线JSON美化、压缩、校验、转义，支持实时预览</p>
+
+    <div class="tool-area">
+      <h3>📝 输入JSON</h3>
+      <textarea id="input" placeholder='粘贴你的JSON数据，例如：{"name":"张三","age":25,"hobbies":["编程","音乐"]}'></textarea>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="formatJSON()">✨ 美化</button>
+        <button class="btn btn-primary" onclick="compressJSON()">📦 压缩</button>
+        <button class="btn btn-secondary" onclick="validateJSON()">✅ 校验</button>
+        <button class="btn btn-secondary" onclick="escapeJSON()">🔒 转义</button>
+        <button class="btn btn-secondary" onclick="unescapeJSON()">🔓 反转义</button>
+        <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+      </div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📤 输出结果 <button class="btn btn-success" style="margin-left:auto;padding:6px 16px;font-size:0.85em" onclick="copyResult()">📋 复制</button></h3>
+      <div id="output" class="result-area"></div>
+      <div id="stats" style="margin-top:10px;font-size:0.85em;color:var(--text-light)"></div>
+    </div>
+
+    <div class="tip">
+      <strong>💡 提示：</strong> 所有处理都在浏览器本地完成，您的数据不会上传到服务器。
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const stats = document.getElementById('stats');
+
+function formatJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    const formatted = JSON.stringify(obj, null, 2);
+    output.textContent = formatted;
+    updateStats(obj);
+    showToast('格式化成功');
+  } catch (e) {
+    output.textContent = '❌ JSON解析错误: ' + e.message;
+    stats.textContent = '';
+  }
+}
+
+function compressJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    const compressed = JSON.stringify(obj);
+    output.textContent = compressed;
+    stats.textContent = `压缩后大小: ${new Blob([compressed]).size} 字节`;
+    showToast('压缩成功');
+  } catch (e) {
+    output.textContent = '❌ JSON解析错误: ' + e.message;
+  }
+}
+
+function validateJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    const keys = countKeys(obj);
+    output.textContent = '✅ JSON格式正确！\n\n类型: ' + getType(obj) + '\n键值对数: ' + keys;
+    updateStats(obj);
+  } catch (e) {
+    output.textContent = '❌ JSON格式错误\n\n' + e.message;
+    stats.textContent = '';
+  }
+}
+
+function escapeJSON() {
+  output.textContent = input.value.replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+  showToast('转义完成');
+}
+
+function unescapeJSON() {
+  output.textContent = input.value.replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t');
+  showToast('反转义完成');
+}
+
+function clearAll() {
+  input.value = '';
+  output.textContent = '';
+  stats.textContent = '';
+}
+
+function copyResult() {
+  copyToClipboard(output.textContent);
+}
+
+function updateStats(obj) {
+  const str = JSON.stringify(obj);
+  stats.textContent = `字符数: ${str.length} | 字节: ${new Blob([str]).size} | 类型: ${getType(obj)}`;
+}
+
+function getType(obj) {
+  if (Array.isArray(obj)) return `数组 (长度: ${obj.length})`;
+  if (typeof obj === 'object' && obj !== null) return `对象 (键: ${Object.keys(obj).length})`;
+  return typeof obj;
+}
+
+function countKeys(obj) {
+  if (Array.isArray(obj)) return obj.length;
+  if (typeof obj === 'object' && obj !== null) return Object.keys(obj).length;
+  return 0;
+}
+</script>
+</body>
+</html>

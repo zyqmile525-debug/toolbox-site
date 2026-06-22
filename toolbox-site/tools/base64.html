@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64编解码 - 在线Base64编码解码工具 | ToolBox</title>
+<meta name="description" content="免费在线Base64编码解码工具，支持文本和文件的Base64转换，支持中文。">
+<meta name="keywords" content="Base64,编码,解码,Base64编码,Base64解码,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工具 / Base64编解码</div>
+    <h1>🔐 Base64编解码</h1>
+    <p class="subtitle">在线Base64编码/解码，支持文本和文件，支持中文</p>
+
+    <div class="tool-area">
+      <h3>📝 输入文本</h3>
+      <textarea id="input" placeholder="输入要编码或解码的文本..."></textarea>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="encode()">🔒 编码 →</button>
+        <button class="btn btn-primary" onclick="decode()">🔓 ← 解码</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">📁 从文件导入</button>
+        <input type="file" id="fileInput" style="display:none" onchange="loadFile(this.files[0])">
+        <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+      </div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📤 输出结果
+        <button class="btn btn-success" style="margin-left:auto;padding:6px 16px;font-size:0.85em" onclick="copyResult()">📋 复制</button>
+        <button class="btn btn-secondary" style="padding:6px 16px;font-size:0.85em" onclick="downloadResult()">💾 下载</button>
+      </h3>
+      <textarea id="output" placeholder="结果将显示在这里..." style="min-height:150px;background:#f8fafc"></textarea>
+      <div id="stats" style="margin-top:10px;font-size:0.85em;color:var(--text-light)"></div>
+    </div>
+
+    <div class="tip">
+      <strong>💡 关于Base64：</strong> Base64是一种用64个ASCII字符来表示二进制数据的编码方式，常用于在文本协议中传输二进制数据，如邮件附件、数据URL等。
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const stats = document.getElementById('stats');
+
+function encode() {
+  try {
+    const text = input.value;
+    const encoded = btoa(unescape(encodeURIComponent(text)));
+    output.value = encoded;
+    stats.textContent = `原始: ${new Blob([text]).size} 字节 → 编码后: ${new Blob([encoded]).size} 字节`;
+    showToast('编码成功');
+  } catch (e) {
+    output.value = '❌ 编码错误: ' + e.message;
+  }
+}
+
+function decode() {
+  try {
+    const text = input.value.trim();
+    const decoded = decodeURIComponent(escape(atob(text)));
+    output.value = decoded;
+    stats.textContent = `Base64: ${text.length} 字符 → 解码后: ${new Blob([decoded]).size} 字节`;
+    showToast('解码成功');
+  } catch (e) {
+    output.value = '❌ 解码错误: 请输入有效的Base64字符串';
+  }
+}
+
+function loadFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64 = reader.result.split(',')[1];
+    const dataUrl = reader.result;
+    input.value = base64;
+    output.value = dataUrl;
+    stats.textContent = `文件: ${file.name} (${formatSize(file.size)}) → Data URL长度: ${dataUrl.length} 字符`;
+    showToast('文件已转为Base64');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearAll() {
+  input.value = '';
+  output.value = '';
+  stats.textContent = '';
+}
+
+function copyResult() {
+  copyToClipboard(output.value);
+}
+
+function downloadResult() {
+  downloadFile(output.value, 'base64_output.txt');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时间戳转换 - Unix时间戳在线转换 | ToolBox</title>
+<meta name="description" content="免费在线时间戳转换工具，Unix时间戳与日期互转，支持多时区。">
+<meta name="keywords" content="时间戳,Unix时间戳,时间戳转换,日期转换,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工具 / 时间戳转换</div>
+    <h1>⏰ 时间戳转换</h1>
+    <p class="subtitle">Unix时间戳与日期互转，实时显示当前时间戳</p>
+
+    <div class="tool-area">
+      <h3>📌 当前时间</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="background:#f1f5f9;padding:16px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light);margin-bottom:4px">Unix时间戳（秒）</div>
+          <div style="font-family:Consolas,monospace;font-size:1.6em;font-weight:bold;color:var(--primary)" id="nowSec">-</div>
+        </div>
+        <div style="background:#f1f5f9;padding:16px;border-radius:12px;text-align:center">
+          <div style="font-size:0.85em;color:var(--text-light);margin-bottom:4px">Unix时间戳（毫秒）</div>
+          <div style="font-family:Consolas,monospace;font-size:1.6em;font-weight:bold;color:var(--primary)" id="nowMs">-</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:1.1em" id="nowDate">-</div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📅 时间戳 → 日期</h3>
+      <div class="grid-2">
+        <div>
+          <label>输入时间戳</label>
+          <input type="text" id="tsInput" placeholder="例如: 1700000000" oninput="tsToDate()">
+        </div>
+        <div>
+          <label>单位</label>
+          <select id="tsUnit" onchange="tsToDate()">
+            <option value="s">秒 (s)</option>
+            <option value="ms">毫秒 (ms)</option>
+          </select>
+        </div>
+      </div>
+      <div id="tsResult" class="result-area" style="margin-top:16px;min-height:auto"></div>
+    </div>
+
+    <div class="tool-area">
+      <h3>🕐 日期 → 时间戳</h3>
+      <div class="grid-2">
+        <div>
+          <label>日期时间</label>
+          <input type="datetime-local" id="dateInput" onchange="dateToTs()">
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" onclick="setNow()" style="width:100%">📌 使用当前时间</button>
+        </div>
+      </div>
+      <div id="dateResult" class="result-area" style="margin-top:16px;min-height:auto"></div>
+    </div>
+
+    <div class="tool-area">
+      <h3>📋 常用时间戳</h3>
+      <table class="data-table">
+        <thead><tr><th>说明</th><th>时间戳</th><th>日期</th></tr></thead>
+        <tbody id="commonTs"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+function updateNow() {
+  const now = new Date();
+  const sec = Math.floor(now.getTime() / 1000);
+  document.getElementById('nowSec').textContent = sec;
+  document.getElementById('nowMs').textContent = now.getTime();
+  document.getElementById('nowDate').textContent = formatDate(now);
+}
+
+function tsToDate() {
+  const input = document.getElementById('tsInput').value.trim();
+  if (!input) { document.getElementById('tsResult').textContent = ''; return; }
+
+  let ts = parseInt(input);
+  if (isNaN(ts)) { document.getElementById('tsResult').textContent = '❌ 请输入有效数字'; return; }
+
+  const unit = document.getElementById('tsUnit').value;
+  if (unit === 's') ts *= 1000;
+
+  const date = new Date(ts);
+  if (isNaN(date.getTime())) { document.getElementById('tsResult').textContent = '❌ 无效时间戳'; return; }
+
+  document.getElementById('tsResult').innerHTML =
+    `本地时间: ${formatDate(date)}\nUTC时间: ${date.toUTCString()}\nISO格式: ${date.toISOString()}\n距今: ${timeAgo(date)}`;
+}
+
+function dateToTs() {
+  const input = document.getElementById('dateInput').value;
+  if (!input) { document.getElementById('dateResult').textContent = ''; return; }
+
+  const date = new Date(input);
+  const sec = Math.floor(date.getTime() / 1000);
+  document.getElementById('dateResult').innerHTML =
+    `秒级时间戳: ${sec}\n毫秒级时间戳: ${date.getTime()}\nISO格式: ${date.toISOString()}`;
+}
+
+function setNow() {
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  document.getElementById('dateInput').value = local.toISOString().slice(0, 16);
+  dateToTs();
+}
+
+function formatDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  const h = String(date.getHours()).padStart(2,'0');
+  const min = String(date.getMinutes()).padStart(2,'0');
+  const s = String(date.getSeconds()).padStart(2,'0');
+  return `${y}-${m}-${d} ${h}:${min}:${s}`;
+}
+
+function timeAgo(date) {
+  const diff = Date.now() - date.getTime();
+  const abs = Math.abs(diff);
+  const prefix = diff > 0 ? '' : '后';
+
+  if (abs < 60000) return Math.floor(abs/1000) + '秒' + prefix;
+  if (abs < 3600000) return Math.floor(abs/60000) + '分钟' + prefix;
+  if (abs < 86400000) return Math.floor(abs/3600000) + '小时' + prefix;
+  if (abs < 2592000000) return Math.floor(abs/86400000) + '天' + prefix;
+  if (abs < 31536000000) return Math.floor(abs/2592000000) + '个月' + prefix;
+  return Math.floor(abs/31536000000) + '年' + prefix;
+}
+
+function initCommon() {
+  const now = Date.now();
+  const items = [
+    { label: '今天 00:00:00', ts: Math.floor(new Date().setHours(0,0,0,0)/1000) },
+    { label: '今天 23:59:59', ts: Math.floor(new Date().setHours(23,59,59,999)/1000) },
+    { label: '本周一 00:00:00', ts: (() => { const d = new Date(); const day = d.getDay() || 7; d.setDate(d.getDate()-day+1); d.setHours(0,0,0,0); return Math.floor(d/1000); })() },
+    { label: '本月1日 00:00:00', ts: Math.floor(new Date(new Date().getFullYear(), new Date().getMonth(), 1)/1000) },
+    { label: '今年1月1日', ts: Math.floor(new Date(new Date().getFullYear(), 0, 1)/1000) },
+  ];
+
+  document.getElementById('commonTs').innerHTML = items.map(i =>
+    `<tr><td>${i.label}</td><td style="font-family:Consolas,monospace">${i.ts}</td>
+    <td>${formatDate(new Date(i.ts*1000))}</td></tr>`
+  ).join('');
+}
+
+updateNow();
+setInterval(updateNow, 1000);
+initCommon();
+setNow();
+</script>
+</body>
+</html>

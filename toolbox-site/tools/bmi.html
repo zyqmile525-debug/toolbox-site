@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI计算器 - 身体质量指数在线计算 | ToolBox</title>
+<meta name="description" content="免费在线BMI计算器，计算身体质量指数，评估健康体重范围。">
+<meta name="keywords" content="BMI计算器,身体质量指数,体重指数,健康体重,在线工具">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <a href="../index.html" class="logo">🧰 ToolBox</a>
+    <nav class="nav"><a href="../index.html">返回首页</a></nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 生活工具 / BMI计算器</div>
+    <h1>⚖️ BMI计算器</h1>
+    <p class="subtitle">身体质量指数（BMI）在线计算，评估健康体重</p>
+
+    <div class="tool-area">
+      <div class="grid-2">
+        <div>
+          <label>身高 (cm)</label>
+          <input type="number" id="height" placeholder="例如: 170" oninput="calcBMI()">
+        </div>
+        <div>
+          <label>体重 (kg)</label>
+          <input type="number" id="weight" placeholder="例如: 65" oninput="calcBMI()">
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-area" id="resultArea" style="display:none">
+      <h3>📊 计算结果</h3>
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:3em;font-weight:800;color:var(--primary)" id="bmiValue">-</div>
+        <div style="font-size:1.2em;margin-top:8px" id="bmiCategory">-</div>
+      </div>
+
+      <div style="background:#f1f5f9;border-radius:12px;padding:20px;margin-bottom:20px">
+        <div style="height:30px;border-radius:15px;overflow:hidden;position:relative;background:linear-gradient(to right,#3b82f6,#10b981,#f59e0b,#ef4444)">
+          <div id="bmiMarker" style="position:absolute;top:-5px;width:4px;height:40px;background:#000;border-radius:2px;transition:left 0.5s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.75em;color:var(--text-light);margin-top:4px">
+          <span>偏瘦 &lt;18.5</span><span>正常 18.5-24</span><span>超重 24-28</span><span>肥胖 &gt;28</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="background:#eff6ff;padding:16px;border-radius:12px">
+          <div style="font-size:0.85em;color:var(--text-light)">健康体重范围</div>
+          <div style="font-size:1.2em;font-weight:bold;color:#3b82f6" id="healthyRange">-</div>
+        </div>
+        <div style="background:#fef3c7;padding:16px;border-radius:12px">
+          <div style="font-size:0.85em;color:var(--text-light)">理想体重</div>
+          <div style="font-size:1.2em;font-weight:bold;color:#d97706" id="idealWeight">-</div>
+        </div>
+      </div>
+
+      <div class="tip" style="margin-top:20px">
+        <strong>⚠️ 注意：</strong> BMI仅供参考，不适用于运动员、孕妇、儿童等特殊人群。如有健康疑问请咨询专业医生。
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
+<script src="../js/main.js"></script>
+<script>
+function calcBMI() {
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+
+  if (!height || !weight || height <= 0 || weight <= 0) {
+    document.getElementById('resultArea').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('resultArea').style.display = '';
+  const heightM = height / 100;
+  const bmi = weight / (heightM * heightM);
+  const bmiRound = bmi.toFixed(1);
+
+  document.getElementById('bmiValue').textContent = bmiRound;
+
+  let category, color;
+  if (bmi < 18.5) { category = '偏瘦'; color = '#3b82f6'; }
+  else if (bmi < 24) { category = '正常'; color = '#10b981'; }
+  else if (bmi < 28) { category = '超重'; color = '#f59e0b'; }
+  else { category = '肥胖'; color = '#ef4444'; }
+
+  document.getElementById('bmiCategory').innerHTML = `<span style="color:${color};font-weight:bold">${category}</span>`;
+
+  // BMI标记位置
+  const minBMI = 15, maxBMI = 35;
+  const percent = Math.min(100, Math.max(0, ((bmi - minBMI) / (maxBMI - minBMI)) * 100));
+  document.getElementById('bmiMarker').style.left = percent + '%';
+
+  // 健康体重范围
+  const minHealthy = (18.5 * heightM * heightM).toFixed(1);
+  const maxHealthy = (24 * heightM * heightM).toFixed(1);
+  document.getElementById('healthyRange').textContent = `${minHealthy} - ${maxHealthy} kg`;
+
+  // 理想体重
+  const ideal = (22 * heightM * heightM).toFixed(1);
+  document.getElementById('idealWeight').textContent = `${ideal} kg`;
+}
+</script>
+</body>
+</html>
