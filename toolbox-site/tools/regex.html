@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>正则表达式测试 - 在线正则测试工具 | ToolBox</title>
-<meta name="description" content="免费在线正则表达式测试工具，实时匹配高亮，常用正则表达式参考。">
-<meta name="keywords" content="正则表达式,正则测试,正则在线,regex,在线工具">
+<title>正则表达式测�?- 在线正则测试工具 | ToolBox</title>
+<meta name="description" content="免费在线正则表达式测试工具，实时匹配高亮，常用正则表达式参考�?>
+<meta name="keywords" content="正则表达�?正则测试,正则在线,regex,在线工具">
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -18,15 +18,15 @@
 
 <main class="tool-page">
   <div class="container">
-    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工具 / 正则测试</div>
-    <h1>.* 正则表达式测试</h1>
+    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工�?/ 正则测试</div>
+    <h1>.* 正则表达式测�?/h1>
     <p class="subtitle">在线正则表达式测试，实时匹配高亮</p>
 
     <div class="tool-area">
-      <h3>📝 正则表达式</h3>
+      <h3>📝 正则表达�?/h3>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
         <span style="font-family:Consolas,monospace;font-size:1.2em;color:var(--primary)">/</span>
-        <input type="text" id="regexInput" placeholder="输入正则表达式" oninput="testRegex()" style="font-family:Consolas,monospace">
+        <input type="text" id="regexInput" placeholder="输入正则表达�? oninput="testRegex()" style="font-family:Consolas,monospace">
         <span style="font-family:Consolas,monospace;font-size:1.2em;color:var(--primary)">/</span>
         <input type="text" id="flagsInput" value="g" style="width:60px;font-family:Consolas,monospace;text-align:center" oninput="testRegex()">
       </div>
@@ -35,13 +35,13 @@
           <input type="checkbox" id="flagG" checked onchange="updateFlags()"> 全局 (g)
         </label>
         <label style="display:flex;align-items:center;gap:4px;font-size:0.85em;cursor:pointer">
-          <input type="checkbox" id="flagI" onchange="updateFlags()"> 忽略大小写 (i)
+          <input type="checkbox" id="flagI" onchange="updateFlags()"> 忽略大小�?(i)
         </label>
         <label style="display:flex;align-items:center;gap:4px;font-size:0.85em;cursor:pointer">
           <input type="checkbox" id="flagM" onchange="updateFlags()"> 多行 (m)
         </label>
         <label style="display:flex;align-items:center;gap:4px;font-size:0.85em;cursor:pointer">
-          <input type="checkbox" id="flagS" onchange="updateFlags()"> 点匹配换行 (s)
+          <input type="checkbox" id="flagS" onchange="updateFlags()"> 点匹配换�?(s)
         </label>
       </div>
     </div>
@@ -63,14 +63,14 @@
     </div>
 
     <div class="tool-area">
-      <h3>📚 常用正则表达式</h3>
+      <h3>📚 常用正则表达�?/h3>
       <div style="display:grid;gap:8px">
-        <div class="regex-preset" data-regex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" data-text="联系我: test@example.com 或 admin@site.org">📧 邮箱地址</div>
-        <div class="regex-preset" data-regex="1[3-9]\d{9}" data-text="手机号: 13812345678, 15999998888">📱 手机号码</div>
-        <div class="regex-preset" data-regex="https?://[^\s]+" data-text="访问 https://example.com 或 http://test.org/path">🔗 网址链接</div>
-        <div class="regex-preset" data-regex="\d{4}-\d{2}-\d{2}" data-text="日期: 2026-01-15 和 2025-12-31">📅 日期格式</div>
+        <div class="regex-preset" data-regex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" data-text="联系�? test@example.com �?admin@site.org">📧 邮箱地址</div>
+        <div class="regex-preset" data-regex="1[3-9]\d{9}" data-text="手机�? 13812345678, 15999998888">📱 手机号码</div>
+        <div class="regex-preset" data-regex="https?://[^\s]+" data-text="访问 https://example.com �?http://test.org/path">🔗 网址链接</div>
+        <div class="regex-preset" data-regex="\d{4}-\d{2}-\d{2}" data-text="日期: 2026-01-15 �?2025-12-31">📅 日期格式</div>
         <div class="regex-preset" data-regex="#[0-9a-fA-F]{6}" data-text="颜色: #ff6b6b, #6366f1, #ffffff">🎨 HEX颜色</div>
-        <div class="regex-preset" data-regex="<[^>]+>" data-text="<div class='test'><p>Hello</p></div>">🏷️ HTML标签</div>
+        <div class="regex-preset" data-regex="<[^>]+>" data-text="<div class='test'><p>Hello</p></div>">🏷�?HTML标签</div>
       </div>
     </div>
   </div>
@@ -128,16 +128,16 @@ function testRegex() {
       lastIndex = m.index + m.value.length;
     });
     highlighted += escapeHtml(text.slice(lastIndex));
-    document.getElementById('highlightedText').innerHTML = highlighted || '无匹配';
+    document.getElementById('highlightedText').innerHTML = highlighted || '无匹�?;
 
     // 匹配详情
     document.getElementById('matchDetails').innerHTML = matches.length > 0 ?
       `<table class="data-table"><thead><tr><th>#</th><th>匹配内容</th><th>位置</th><th>分组</th></tr></thead><tbody>` +
       matches.map((m, i) => `<tr><td>${i+1}</td><td style="font-family:Consolas,monospace;color:var(--primary)">${escapeHtml(m.value)}</td><td>${m.index}</td><td>${m.groups.length > 0 ? m.groups.map((g,j) => `$${j+1}: ${escapeHtml(g||'')}`).join(', ') : '-'}</td></tr>`).join('') +
-      '</tbody></table>' : '<div style="color:var(--text-light)">无匹配结果</div>';
+      '</tbody></table>' : '<div style="color:var(--text-light)">无匹配结�?/div>';
 
   } catch (e) {
-    document.getElementById('matchCount').innerHTML = `<span style="color:#ef4444">❌ 正则表达式错误: ${e.message}</span>`;
+    document.getElementById('matchCount').innerHTML = `<span style="color:#ef4444">�?正则表达式错�? ${e.message}</span>`;
     document.getElementById('highlightedText').textContent = text;
     document.getElementById('matchDetails').innerHTML = '';
   }
