@@ -4,191 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>图片压缩 - 在线免费图片压缩工具 | ToolBox</title>
-<meta name="description" content="免费在线图片压缩工具，支持PNG/JPG/WebP格式，保持画质减小文件大小，支持批量压缩�?>
-<meta name="keywords" content="图片压缩,在线压缩,PNG压缩,JPG压缩,WebP压缩,图片瘦身">
+<meta name="description" content="免费在线图片压缩工具，支持PNG/JPG/WebP格式，保持画质减小文件大小。">
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<header class="header">
-  <div class="container">
-    <a href="../index.html" class="logo">🧰 ToolBox</a>
-    <nav class="nav"><a href="../index.html">返回首页</a></nav>
-  </div>
-</header>
-
-<main class="tool-page">
-  <div class="container">
-    <div class="breadcrumb"><a href="../index.html">首页</a> / 图片工具 / 图片压缩</div>
-    <h1>🗜�?图片压缩</h1>
-    <p class="subtitle">在线压缩PNG/JPG/WebP，保持画质减小文件大小，所有处理在浏览器本地完�?/p>
-
-    <div class="tool-area">
-      <h3>📤 上传图片</h3>
-      <div class="preview-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <div id="dropText">📁 点击或拖拽图片到这里<br><small>支持 PNG、JPG、WebP 格式，最�?20MB</small></div>
-        <canvas id="previewCanvas" style="display:none;max-width:100%;border-radius:8px"></canvas>
-      </div>
-      <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
-
-      <div class="grid-2" style="margin-top:16px">
-        <div>
-          <label>压缩质量: <span id="qualityVal">80</span>%</label>
-          <input type="range" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qualityVal').textContent=this.value">
-          <div class="range-labels"><span>小文�?/span><span>高质�?/span></div>
-        </div>
-        <div>
-          <label>输出格式</label>
-          <select id="format">
-            <option value="auto">保持原格�?/option>
-            <option value="image/jpeg">JPG</option>
-            <option value="image/png">PNG</option>
-            <option value="image/webp">WebP</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="compressImages()">🗜�?开始压�?/button>
-        <button class="btn btn-success" onclick="downloadAll()" id="downloadBtn" style="display:none">💾 全部下载</button>
-        <button class="btn btn-secondary" onclick="clearImages()">🗑�?清空</button>
-      </div>
-    </div>
-
-    <div class="tool-area" id="resultsArea" style="display:none">
-      <h3>📊 压缩结果</h3>
-      <div id="results"></div>
-    </div>
-
-    <div class="tip">
-      <strong>💡 提示�?/strong> 图片在您的浏览器中处理，不会上传到任何服务器。压缩效果取决于图片内容，照片类图片压缩效果更明显�?    </div>
-  </div>
-</main>
-
+<header class="header"><div class="container"><a href="../index.html" class="logo">🧰 ToolBox</a><nav class="nav"><a href="../index.html">返回首页</a></nav></div></header>
+<main class="tool-page"><div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a> / 图片工具 / 图片压缩</div>
+<h1>🗜️ 图片压缩</h1>
+<p class="subtitle">在线压缩PNG/JPG/WebP，保持画质减小文件大小</p>
+<div class="tool-area">
+<h3>📤 上传图片</h3>
+<div class="preview-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+<div id="dropText">📁 点击或拖拽图片到这里<br><small>支持 PNG、JPG、WebP 格式</small></div>
+<canvas id="previewCanvas" style="display:none;max-width:100%;border-radius:8px"></canvas>
+</div>
+<input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+<div style="margin-top:16px"><label>压缩质量: <span id="qualityVal">80</span>%</label>
+<input type="range" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qualityVal').textContent=this.value">
+<div class="range-labels"><span>小文件</span><span>高质量</span></div></div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="compressImages()">🗜️ 开始压缩</button>
+<button class="btn btn-success" onclick="downloadAll()" id="downloadBtn" style="display:none">💾 全部下载</button>
+<button class="btn btn-secondary" onclick="clearImages()">🗑️ 清空</button>
+</div></div>
+<div class="tool-area" id="resultsArea" style="display:none"><h3>📊 压缩结果</h3><div id="results"></div></div>
+<div class="tip"><strong>💡 提示：</strong> 图片在您的浏览器中处理，不会上传到任何服务器。</div>
+</div></main>
 <footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
 <script src="../js/main.js"></script>
 <script>
-let imageFiles = [];
-let compressedResults = [];
-
-const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--primary)'; });
-dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = ''; });
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.style.borderColor = '';
-  handleFiles(e.dataTransfer.files);
-});
-
-function handleFiles(files) {
-  for (const file of files) {
-    if (!file.type.startsWith('image/')) continue;
-    imageFiles.push(file);
-  }
-  if (imageFiles.length > 0) showPreview(imageFiles[0]);
-  showToast(`已添�?${files.length} 张图片`);
-}
-
-function showPreview(file) {
-  const canvas = document.getElementById('previewCanvas');
-  const ctx = canvas.getContext('2d');
-  const img = new Image();
-  img.onload = () => {
-    canvas.width = Math.min(img.width, 400);
-    canvas.height = canvas.width * (img.height / img.width);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-    document.getElementById('dropText').style.display = 'none';
-    dropZone.classList.add('has-content');
-  };
-  img.src = URL.createObjectURL(file);
-}
-
-async function compressImages() {
-  if (imageFiles.length === 0) { showToast('请先上传图片'); return; }
-
-  const quality = parseInt(document.getElementById('quality').value) / 100;
-  const formatSelect = document.getElementById('format').value;
-  compressedResults = [];
-
-  for (const file of imageFiles) {
-    const result = await compressImage(file, quality, formatSelect);
-    compressedResults.push(result);
-  }
-
-  renderResults();
-  document.getElementById('downloadBtn').style.display = '';
-  document.getElementById('resultsArea').style.display = '';
-}
-
-function compressImage(file, quality, formatSelect) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-
-      const format = formatSelect === 'auto' ? file.type : formatSelect;
-      const ext = format === 'image/jpeg' ? '.jpg' : format === 'image/png' ? '.png' : '.webp';
-
-      canvas.toBlob((blob) => {
-        const ratio = ((1 - blob.size / file.size) * 100).toFixed(1);
-        resolve({
-          name: file.name.replace(/\.[^.]+$/, '') + ext,
-          original: file,
-          compressed: blob,
-          originalSize: file.size,
-          compressedSize: blob.size,
-          ratio: ratio,
-          url: URL.createObjectURL(blob)
-        });
-      }, format, quality);
-    };
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-function renderResults() {
-  const container = document.getElementById('results');
-  let totalOriginal = 0, totalCompressed = 0;
-
-  container.innerHTML = compressedResults.map(r => {
-    totalOriginal += r.originalSize;
-    totalCompressed += r.compressedSize;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--border)">
-      <div>
-        <strong>${r.name}</strong><br>
-        <small style="color:var(--text-light)">${formatSize(r.originalSize)} �?${formatSize(r.compressedSize)}
-        <span style="color:#10b981;font-weight:bold">�?{r.ratio}%</span></small>
-      </div>
-      <a href="${r.url}" download="${r.name}" class="btn btn-secondary" style="padding:6px 14px;font-size:0.85em">下载</a>
-    </div>`;
-  }).join('') + `<div style="padding:12px;font-weight:bold;background:#f1f5f9;border-radius:0 0 12px 12px">
-    总计: ${formatSize(totalOriginal)} �?${formatSize(totalCompressed)}
-    <span style="color:#10b981">�?{((1-totalCompressed/totalOriginal)*100).toFixed(1)}%</span>
-  </div>`;
-}
-
-function downloadAll() {
-  compressedResults.forEach(r => {
-    const a = document.createElement('a');
-    a.href = r.url;
-    a.download = r.name;
-    a.click();
-  });
-}
-
-function clearImages() {
-  imageFiles = [];
-  compressedResults = [];
-  document.getElementById('previewCanvas').style.display = 'none';
-  document.getElementById('dropText').style.display = '';
-  dropZone.classList.remove('has-content');
-  document.getElementById('resultsArea').style.display = 'none';
-  document.getElementById('downloadBtn').style.display = 'none';
-}
+let imageFiles=[],compressedResults=[];
+const dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='var(--primary)'});
+dz.addEventListener('dragleave',()=>{dz.style.borderColor=''});
+dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';handleFiles(e.dataTransfer.files)});
+function handleFiles(files){for(const f of files){if(!f.type.startsWith('image/'))continue;imageFiles.push(f)}if(imageFiles.length>0)showPreview(imageFiles[0]);showToast('已添加 '+files.length+' 张图片')}
+function showPreview(file){const c=document.getElementById('previewCanvas'),ctx=c.getContext('2d'),img=new Image();img.onload=()=>{c.width=Math.min(img.width,400);c.height=c.width*(img.height/img.width);ctx.drawImage(img,0,0,c.width,c.height);c.style.display='block';document.getElementById('dropText').style.display='none'};img.src=URL.createObjectURL(file)}
+async function compressImages(){if(!imageFiles.length){showToast('请先上传图片');return}const q=parseInt(document.getElementById('quality').value)/100;compressedResults=[];for(const f of imageFiles){compressedResults.push(await new Promise(r=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);c.toBlob(b=>{r({name:f.name.replace(/\.[^.]+$/,'')+'.jpg',url:URL.createObjectURL(b),orig:f.size,comp:b.size,ratio:((1-b.size/f.size)*100).toFixed(1)})},'image/jpeg',q)};img.src=URL.createObjectURL(f)}))}renderResults();document.getElementById('downloadBtn').style.display='';document.getElementById('resultsArea').style.display=''}
+function renderResults(){let to=0,tc=0;document.getElementById('results').innerHTML=compressedResults.map(r=>{to+=r.orig;tc+=r.comp;return'<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--border)"><div><strong>'+r.name+'</strong><br><small>'+formatSize(r.orig)+' → '+formatSize(r.comp)+' <span style="color:#10b981">↓'+r.ratio+'%</span></small></div><a href="'+r.url+'" download="'+r.name+'" class="btn btn-secondary" style="padding:6px 14px;font-size:0.85em">下载</a></div>'}).join('')+'<div style="padding:12px;font-weight:bold;background:#f1f5f9">总计: '+formatSize(to)+' → '+formatSize(tc)+' <span style="color:#10b981">↓'+((1-tc/to)*100).toFixed(1)+'%</span></div>'}
+function downloadAll(){compressedResults.forEach(r=>{const a=document.createElement('a');a.href=r.url;a.download=r.name;a.click()})}
+function clearImages(){imageFiles=[];compressedResults=[];document.getElementById('previewCanvas').style.display='none';document.getElementById('dropText').style.display='';document.getElementById('resultsArea').style.display='none';document.getElementById('downloadBtn').style.display='none'}
 </script>
 </body>
 </html>

@@ -4,218 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>颜色转换 - HEX/RGB/HSL在线转换 | ToolBox</title>
-<meta name="description" content="免费在线颜色转换工具，HEX、RGB、HSL互转，带颜色拾取器和调色板�?>
-<meta name="keywords" content="颜色转换,HEX转RGB,RGB转HSL,颜色拾取�?调色�?在线工具">
+<meta name="description" content="免费在线颜色转换工具，HEX、RGB、HSL互转，带颜色拾取器和调色板。">
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<header class="header">
-  <div class="container">
-    <a href="../index.html" class="logo">🧰 ToolBox</a>
-    <nav class="nav"><a href="../index.html">返回首页</a></nav>
-  </div>
-</header>
-
-<main class="tool-page">
-  <div class="container">
-    <div class="breadcrumb"><a href="../index.html">首页</a> / 开发工�?/ 颜色转换</div>
-    <h1>🎨 颜色转换</h1>
-    <p class="subtitle">HEX、RGB、HSL在线互转，带颜色拾取�?/p>
-
-    <div class="tool-area">
-      <div class="grid-2">
-        <div>
-          <div style="width:100%;height:180px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border)" id="colorPreview"></div>
-          <label>🎨 拾色�?/label>
-          <input type="color" id="colorPicker" value="#6366f1" style="width:100%;height:44px;border:none;border-radius:8px;cursor:pointer" onchange="fromPicker(this.value)">
-        </div>
-        <div>
-          <div style="margin-bottom:16px">
-            <label>HEX</label>
-            <input type="text" id="hex" value="#6366f1" oninput="fromHex()">
-          </div>
-          <div style="margin-bottom:16px">
-            <label>RGB</label>
-            <div class="grid-3">
-              <input type="number" id="r" min="0" max="255" value="99" oninput="fromRGB()">
-              <input type="number" id="g" min="0" max="255" value="102" oninput="fromRGB()">
-              <input type="number" id="b" min="0" max="255" value="241" oninput="fromRGB()">
-            </div>
-          </div>
-          <div style="margin-bottom:16px">
-            <label>HSL</label>
-            <div class="grid-3">
-              <input type="number" id="h" min="0" max="360" value="239" oninput="fromHSL()">
-              <input type="number" id="s" min="0" max="100" value="84" oninput="fromHSL()">
-              <input type="number" id="l" min="0" max="100" value="67" oninput="fromHSL()">
-            </div>
-          </div>
-          <div class="btn-group">
-            <button class="btn btn-primary" onclick="copyColor()">📋 复制HEX</button>
-            <button class="btn btn-secondary" onclick="randomColor()">🎲 随机颜色</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tool-area">
-      <h3>🎨 CSS代码</h3>
-      <div id="cssOutput" class="result-area" style="min-height:auto;padding:12px"></div>
-    </div>
-
-    <div class="tool-area">
-      <h3>🌈 常用颜色</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px" id="palette"></div>
-    </div>
-  </div>
-</main>
-
+<header class="header"><div class="container"><a href="../index.html" class="logo">🧰 ToolBox</a><nav class="nav"><a href="../index.html">返回首页</a></nav></div></header>
+<main class="tool-page"><div class="container">
+<div class="breadcrumb"><a href="../index.html">首页</a> / 开发工具 / 颜色转换</div>
+<h1>🎨 颜色转换</h1>
+<p class="subtitle">HEX、RGB、HSL在线互转，带颜色拾取器</p>
+<div class="tool-area">
+<div class="grid-2">
+<div>
+<div style="width:100%;height:180px;border-radius:12px;margin-bottom:16px;border:1px solid var(--border)" id="colorPreview"></div>
+<label>🎨 拾色器</label>
+<input type="color" id="colorPicker" value="#6366f1" style="width:100%;height:44px;border:none;border-radius:8px;cursor:pointer" onchange="fromPicker(this.value)">
+</div>
+<div>
+<div style="margin-bottom:16px"><label>HEX</label><input type="text" id="hex" value="#6366f1" oninput="fromHex()"></div>
+<div style="margin-bottom:16px"><label>RGB</label><div class="grid-3"><input type="number" id="r" min="0" max="255" value="99" oninput="fromRGB()"><input type="number" id="g" min="0" max="255" value="102" oninput="fromRGB()"><input type="number" id="b" min="0" max="255" value="241" oninput="fromRGB()"></div></div>
+<div style="margin-bottom:16px"><label>HSL</label><div class="grid-3"><input type="number" id="h" min="0" max="360" value="239" oninput="fromHSL()"><input type="number" id="s" min="0" max="100" value="84" oninput="fromHSL()"><input type="number" id="l" min="0" max="100" value="67" oninput="fromHSL()"></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="copyToClipboard(document.getElementById('hex').value)">📋 复制HEX</button><button class="btn btn-secondary" onclick="randomColor()">🎲 随机</button></div>
+</div></div></div>
+<div class="tool-area"><h3>🎨 CSS代码</h3><div id="cssOutput" class="result-area" style="min-height:auto;padding:12px"></div></div>
+</div></main>
 <footer class="footer"><div class="container">© 2026 ToolBox</div></footer>
 <script src="../js/main.js"></script>
 <script>
-const commonColors = [
-  '#FF0000','#FF5722','#FF9800','#FFC107','#FFEB3B','#8BC34A','#4CAF50','#009688',
-  '#00BCD4','#2196F3','#3F51B5','#673AB7','#9C27B0','#E91E63','#F44336','#795548',
-  '#607D8B','#000000','#333333','#666666','#999999','#CCCCCC','#FFFFFF','#FF6B6B',
-  '#FFA502','#FFD93D','#6BCB77','#4D96FF','#9B59B6','#FF6348','#7BED9F','#70A1FF'
-];
-
-function init() {
-  const palette = document.getElementById('palette');
-  commonColors.forEach(c => {
-    const div = document.createElement('div');
-    div.style.cssText = `width:36px;height:36px;background:${c};border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all 0.2s`;
-    div.title = c;
-    div.onclick = () => { document.getElementById('hex').value = c; fromHex(); };
-    div.onmouseenter = () => div.style.transform = 'scale(1.2)';
-    div.onmouseleave = () => div.style.transform = '';
-    palette.appendChild(div);
-  });
-  fromHex();
-}
-
-function fromPicker(val) {
-  document.getElementById('hex').value = val;
-  fromHex();
-}
-
-function fromHex() {
-  let hex = document.getElementById('hex').value.trim();
-  if (!hex.startsWith('#')) hex = '#' + hex;
-  if (!/^#[0-9a-fA-F]{3,8}$/.test(hex)) return;
-
-  if (hex.length === 4) {
-    hex = '#' + hex[1]+hex[1] + hex[2]+hex[2] + hex[3]+hex[3];
-  }
-
-  const r = parseInt(hex.slice(1,3), 16);
-  const g = parseInt(hex.slice(3,5), 16);
-  const b = parseInt(hex.slice(5,7), 16);
-
-  document.getElementById('r').value = r;
-  document.getElementById('g').value = g;
-  document.getElementById('b').value = b;
-
-  const [h,s,l] = rgbToHsl(r, g, b);
-  document.getElementById('h').value = h;
-  document.getElementById('s').value = s;
-  document.getElementById('l').value = l;
-
-  updatePreview(r, g, b, hex);
-}
-
-function fromRGB() {
-  const r = parseInt(document.getElementById('r').value) || 0;
-  const g = parseInt(document.getElementById('g').value) || 0;
-  const b = parseInt(document.getElementById('b').value) || 0;
-
-  const hex = '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
-  document.getElementById('hex').value = hex;
-
-  const [h,s,l] = rgbToHsl(r, g, b);
-  document.getElementById('h').value = h;
-  document.getElementById('s').value = s;
-  document.getElementById('l').value = l;
-
-  updatePreview(r, g, b, hex);
-}
-
-function fromHSL() {
-  const h = parseInt(document.getElementById('h').value) || 0;
-  const s = parseInt(document.getElementById('s').value) || 0;
-  const l = parseInt(document.getElementById('l').value) || 0;
-
-  const [r,g,b] = hslToRgb(h, s, l);
-  const hex = '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
-
-  document.getElementById('r').value = r;
-  document.getElementById('g').value = g;
-  document.getElementById('b').value = b;
-  document.getElementById('hex').value = hex;
-
-  updatePreview(r, g, b, hex);
-}
-
-function updatePreview(r, g, b, hex) {
-  document.getElementById('colorPreview').style.background = hex;
-  document.getElementById('colorPicker').value = hex.slice(0,7);
-
-  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
-  const textColor = lum > 0.5 ? '#000' : '#fff';
-  document.getElementById('colorPreview').innerHTML =
-    `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:${textColor};font-weight:bold;font-size:1.2em">${hex}</div>`;
-
-  document.getElementById('cssOutput').textContent =
-    `/* HEX */\ncolor: ${hex};\n\n/* RGB */\ncolor: rgb(${r}, ${g}, ${b});\n\n/* HSL */\ncolor: hsl(${document.getElementById('h').value}, ${document.getElementById('s').value}%, ${document.getElementById('l').value}%);`;
-}
-
-function rgbToHsl(r, g, b) {
-  r /= 255; g /= 255; b /= 255;
-  const max = Math.max(r,g,b), min = Math.min(r,g,b);
-  let h, s, l = (max+min)/2;
-  if (max === min) { h = s = 0; }
-  else {
-    const d = max - min;
-    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
-    switch(max) {
-      case r: h = ((g-b)/d + (g<b?6:0))/6; break;
-      case g: h = ((b-r)/d + 2)/6; break;
-      case b: h = ((r-g)/d + 4)/6; break;
-    }
-  }
-  return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
-}
-
-function hslToRgb(h, s, l) {
-  h /= 360; s /= 100; l /= 100;
-  if (s === 0) { const v = Math.round(l*255); return [v,v,v]; }
-  const hue2rgb = (p,q,t) => {
-    if(t<0) t+=1; if(t>1) t-=1;
-    if(t<1/6) return p+(q-p)*6*t;
-    if(t<1/2) return q;
-    if(t<2/3) return p+(q-p)*(2/3-t)*6;
-    return p;
-  };
-  const q = l < 0.5 ? l*(1+s) : l+s-l*s;
-  const p = 2*l - q;
-  return [
-    Math.round(hue2rgb(p,q,h+1/3)*255),
-    Math.round(hue2rgb(p,q,h)*255),
-    Math.round(hue2rgb(p,q,h-1/3)*255)
-  ];
-}
-
-function copyColor() {
-  copyToClipboard(document.getElementById('hex').value);
-}
-
-function randomColor() {
-  const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');
-  document.getElementById('hex').value = hex;
-  fromHex();
-}
-
-init();
+function fromPicker(v){document.getElementById('hex').value=v;fromHex()}
+function fromHex(){let h=document.getElementById('hex').value.trim();if(!h.startsWith('#'))h='#'+h;if(h.length===4)h='#'+h[1]+h[1]+h[2]+h[2]+h[3]+h[3];if(!/^#[0-9a-fA-F]{6}$/.test(h))return;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);document.getElementById('r').value=r;document.getElementById('g').value=g;document.getElementById('b').value=b;const[sh,ss,sl]=rgbToHsl(r,g,b);document.getElementById('h').value=sh;document.getElementById('s').value=ss;document.getElementById('l').value=sl;updatePreview(r,g,b,h)}
+function fromRGB(){const r=parseInt(document.getElementById('r').value)||0,g=parseInt(document.getElementById('g').value)||0,b=parseInt(document.getElementById('b').value)||0;const h='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');document.getElementById('hex').value=h;const[sh,ss,sl]=rgbToHsl(r,g,b);document.getElementById('h').value=sh;document.getElementById('s').value=ss;document.getElementById('l').value=sl;updatePreview(r,g,b,h)}
+function fromHSL(){const h=parseInt(document.getElementById('h').value)||0,s=parseInt(document.getElementById('s').value)||0,l=parseInt(document.getElementById('l').value)||0;const[r,g,b]=hslToRgb(h,s,l);const hex='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');document.getElementById('r').value=r;document.getElementById('g').value=g;document.getElementById('b').value=b;document.getElementById('hex').value=hex;updatePreview(r,g,b,hex)}
+function updatePreview(r,g,b,h){document.getElementById('colorPreview').style.background=h;document.getElementById('colorPicker').value=h;const lum=(0.299*r+0.587*g+0.114*b)/255;const tc=lum>0.5?'#000':'#fff';document.getElementById('colorPreview').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:'+tc+';font-weight:bold;font-size:1.2em">'+h+'</div>';document.getElementById('cssOutput').textContent='/* HEX */\ncolor: '+h+';\n\n/* RGB */\ncolor: rgb('+r+', '+g+', '+b+');\n\n/* HSL */\ncolor: hsl('+document.getElementById('h').value+', '+document.getElementById('s').value+'%, '+document.getElementById('l').value+'%);'}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h,s,l=(mx+mn)/2;if(mx===mn){h=s=0}else{const d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break}}return[Math.round(h*360),Math.round(s*100),Math.round(l*100)]}
+function hslToRgb(h,s,l){h/=360;s/=100;l/=100;if(s===0){const v=Math.round(l*255);return[v,v,v]}const h2r=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const q=l<0.5?l*(1+s):l+s-l*s,p=2*l-q;return[Math.round(h2r(p,q,h+1/3)*255),Math.round(h2r(p,q,h)*255),Math.round(h2r(p,q,h-1/3)*255)]}
+function randomColor(){const h='#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');document.getElementById('hex').value=h;fromHex()}
+fromHex();
 </script>
 </body>
 </html>
